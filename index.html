@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortune Cookie</title>
+
+    <!-- Google Fonts for multiple languages -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Cyrillic:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Turkish:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Vietnamese:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #e6a8b0; 
+            font-family: 'Noto Sans', sans-serif;
+            text-align: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 400px;
+        }
+        #fortune {
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 24px;
+            font-weight: normal;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Fortune</h1>
+        <select id="languageSelect" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="zh">Mandarin Chinese</option>
+            <option value="hi">Hindi</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="ar">Arabic</option>
+            <option value="bn">Bengali</option>
+            <option value="ru">Russian</option>
+            <option value="pt">Portuguese</option>
+            <option value="ur">Urdu</option>
+            <option value="id">Indonesian</option>
+            <option value="de">German</option>
+            <option value="ja">Japanese</option>
+            <option value="sw">Swahili</option>
+            <option value="mr">Marathi</option>
+            <option value="te">Telugu</option>
+            <option value="tr">Turkish</option>
+            <option value="ko">Korean</option>
+            <option value="vi">Vietnamese</option>
+            <option value="ta">Tamil</option>
+            <option value="th">Thai</option>
+            <option value="nl">Dutch</option> <!-- Added Dutch option -->
+        </select>
+        <p id="fortune">Click the button to receive a fortune!</p>
+        <button onclick="showFortune()">Get Fortune</button>
+    </div>
+
+    <script>
+        // Define fortunes for each language
+        const fortunes = {
+            en: [
+                "You will have a great day!",
+            "Something unexpected will happen soon.",
+            "Happiness is just around the corner.",
+            "You will receive good news soon.",
+            "A new opportunity is on its way.",
+            "Fortune favors the brave.",
+            "A surprise awaits you today.",
+            "Expect the best, and the best will come.",
+            "You will soon discover something new about yourself.",
+            "Your hard work will soon pay off.",
+            "A dream will soon become a reality.",
+            "Someone will enter your life and change everything.",
+            "A positive change is on the horizon.",
+            "You will find success in unexpected places.",
+            "Love is near you.",
+            "A wise person will soon give you valuable advice.",
+            "You will meet someone who will inspire you.",
+            "Your creativity will lead to exciting opportunities.",
+            "A time of peace will soon arrive in your life.",
+            "Your positive energy will attract good things."
+            ],
+            zh: [
+               "你将有一个美好的一天！",
+            "不久后将会有意想不到的事情发生。",
+            "幸福就在眼前。",
+            "你很快会收到好消息。",
+            "新的机会即将到来。",
+            "勇敢的人将获得好运。",
+            "今天你将迎来惊喜。",
+            "期待最好的，最好的将会到来。",
+            "你很快会发现自己的一些新事物。",
+            "你的努力很快将结出果实。",
+            "一个梦想将很快变为现实。",
+            "有人将走进你的生活，改变一切。",
+            "积极的变化正在接近。",
+            "你将在意想不到的地方找到成功。",
+            "爱就在你身边。",
+            "一位智者很快会给你宝贵的建议。",
+            "你将遇到一个激励你的人。",
+            "你的创造力将带来令人兴奋的机会。",
+            "很快，一段平静的时光将到来。",
+            "你的正能量将吸引好事发生。"
+            ],
+            th: [
+              "วันนี้จะเป็นวันที่ดีของคุณ!",
+            "เร็วๆ นี้จะมีสิ่งที่ไม่คาดคิดเกิดขึ้น。",
+            "ความสุขกำลังใกล้เข้ามา。",
+            "คุณจะได้รับข่าวดีเร็วๆ นี้。",
+            "โอกาสใหม่กำลังมาถึงคุณ。",
+            "โชคชะตาจะเป็นของคนที่กล้าหาญ。",
+            "วันนี้คุณจะได้รับเซอร์ไพรส์。",
+            "คาดหวังสิ่งที่ดีที่สุดและสิ่งที่ดีที่สุดจะมา。",
+            "คุณจะค้นพบสิ่งใหม่เกี่ยวกับตัวเองในเร็วๆ นี้。",
+            "ความพยายามของคุณจะได้ผลเร็วๆ นี้。",
+            "ความฝันของคุณจะกลายเป็นจริงในเร็วๆ นี้。",
+            "ใครบางคนจะเข้ามาในชีวิตคุณและเปลี่ยนทุกอย่าง。",
+            "การเปลี่ยนแปลงที่ดีอยู่ในเส้นทางของคุณ。",
+            "คุณจะประสบความสำเร็จในที่ที่ไม่คาดคิด。",
+            "ความรักอยู่ใกล้คุณ。",
+            "คนที่มีปัญญาจะให้คำแนะนำที่มีค่ากับคุณเร็วๆ นี้。",
+            "คุณจะได้พบกับคนที่จะสร้างแรงบันดาลใจให้คุณ。",
+            "ความคิดสร้างสรรค์ของคุณจะนำไปสู่โอกาสที่น่าตื่นเต้น。",
+            "เวลาของความสงบสุขจะมาถึงชีวิตคุณในไม่ช้า。",
+            "พลังบวกของคุณจะดึงดูดสิ่งที่ดีเข้ามาในชีวิตคุณ."
+            ],
+            ar: [
+            "سيكون لديك يوم رائع!",
+            "سيحدث شيء غير متوقع قريبًا.",
+            "السعادة قريبة منك.",
+            "ستتلقى أخبارًا جيدة قريبًا.",
+            "فرصة جديدة في طريقها إليك.",
+            "الحظ يفضل الشجعان.",
+            "مفاجأة في انتظارك اليوم.",
+            "توقع الأفضل، والأفضل سيأتي.",
+            "ستكتشف قريبًا شيئًا جديدًا عن نفسك.",
+            "عملك الشاق سيؤتي ثماره قريبًا.",
+            "حلمك سيتحقق قريبًا.",
+            "شخص ما سيدخل حياتك ويغير كل شيء.",
+            "تغيير إيجابي في الطريق.",
+            "ستجد النجاح في أماكن غير متوقعة.",
+            "الحب قريب منك.",
+            "شخص حكيم سيعطيك نصائح ثمينة قريبًا.",
+            "ستلتقي بشخص يلهمك.",
+            "إبداعك سيقودك إلى فرص مثيرة.",
+            "سيأتي وقت من السلام في حياتك قريبًا.",
+            "طاقتك الإيجابية ستجذب الأشياء الجيدة."
+            ],
+            hi: [
+            "आपका दिन बहुत अच्छा होगा!",
+            "जल्द ही कुछ अप्रत्याशित होगा।",
+            "खुशियाँ आपके पास आ रही हैं।",
+            "आपको जल्द ही अच्छी खबर मिलेगी।",
+            "एक नया अवसर आपके रास्ते पर है।",
+            "साहसी लोग ही किस्मत को जीतते हैं।",
+            "आज आपको एक सरप्राइज़ मिलेगा।",
+            "सर्वश्रेष्ठ की उम्मीद करें, और सर्वश्रेष्ठ आएगा।",
+            "आप जल्द ही अपने बारे में कुछ नया जानेंगे।",
+            "आपकी मेहनत जल्द ही रंग लाएगी।",
+            "एक सपना जल्दी ही हकीकत बनेगा।",
+            "कोई आपके जीवन में आएगा और सब कुछ बदल देगा।",
+            "सकारात्मक परिवर्तन आ रहे हैं।",
+            "आप अप्रत्याशित जगहों पर सफलता पाएंगे।",
+            "प्यार आपके पास है।",
+            "एक समझदार व्यक्ति आपको जल्द ही कीमती सलाह देगा।",
+            "आप किसी ऐसे व्यक्ति से मिलेंगे जो आपको प्रेरित करेगा।",
+            "आपकी रचनात्मकता रोमांचक अवसरों की ओर ले जाएगी।",
+            "शांति का समय जल्द ही आपके जीवन में आएगा।",
+            "आपकी सकारात्मक ऊर्जा अच्छी चीजों को आकर्षित करेगी।"
+            ],
+            es: [
+            "¡Tendrás un gran día!",
+            "Algo inesperado ocurrirá pronto.",
+            "La felicidad está a la vuelta de la esquina.",
+            "Pronto recibirás buenas noticias.",
+            "Una nueva oportunidad está en camino.",
+            "La suerte favorece a los valientes.",
+            "Hoy te espera una sorpresa.",
+            "Espera lo mejor, y lo mejor vendrá.",
+            "Pronto descubrirás algo nuevo sobre ti mismo.",
+            "Tu arduo trabajo pronto dará frutos.",
+            "Un sueño se hará realidad pronto.",
+            "Alguien entrará en tu vida y cambiará todo.",
+            "Un cambio positivo se acerca.",
+            "Encontrarás éxito en lugares inesperados.",
+            "El amor está cerca de ti.",
+            "Una persona sabia pronto te dará valiosos consejos.",
+            "Conocerás a alguien que te inspirará.",
+            "Tu creatividad te llevará a oportunidades emocionantes.",
+            "Pronto llegará un tiempo de paz a tu vida.",
+            "Tu energía positiva atraerá cosas buenas."
+            ],
+            fr: [
+               "Vous aurez une journée formidable !",
+            "Quelque chose d'inattendu va se produire bientôt.",
+            "Le bonheur est à portée de main.",
+            "Vous recevrez bientôt de bonnes nouvelles.",
+            "Une nouvelle opportunité arrive.",
+            "La chance sourit aux audacieux.",
+            "Une surprise vous attend aujourd'hui.",
+            "Attendez-vous au meilleur, et le meilleur arrivera.",
+            "Vous découvrirez bientôt quelque chose de nouveau sur vous-même.",
+            "Votre travail acharné portera bientôt ses fruits.",
+            "Un rêve deviendra réalité bientôt.",
+            "Quelqu'un va entrer dans votre vie et tout changer.",
+            "Un changement positif approche.",
+            "Vous trouverez du succès dans des endroits inattendus.",
+            "L'amour est près de vous.",
+            "Une personne sage vous donnera bientôt des conseils précieux.",
+            "Vous rencontrerez quelqu'un qui vous inspirera.",
+            "Votre créativité vous ouvrira de nouvelles opportunités passionnantes.",
+            "Bientôt, un temps de paix arrivera dans votre vie.",
+            "Votre énergie positive attirera de bonnes choses."
+            ],
+            bn: [
+            "আপনার দিন খুব ভাল হবে!",
+            "শীঘ্রই কিছু অপ্রত্যাশিত ঘটবে।",
+            "খুশি খুব কাছেই।",
+            "আপনি শীঘ্রই ভালো খবর পাবেন।",
+            "একটি নতুন সুযোগ আসছে আপনার পথে।",
+            "দুঃসাহসী ব্যক্তিরা ভাগ্যবান।",
+            "আজ একটি চমক অপেক্ষা করছে আপনাকে।",
+            "সেরা কিছু আশা করুন, এবং সেরা আসবে।",
+            "আপনি শীঘ্রই আপনার সম্পর্কে কিছু নতুন জানতে পারবেন।",
+            "আপনার পরিশ্রম শীঘ্রই ফলপ্রসূ হবে।",
+            "একটি স্বপ্ন শীঘ্রই বাস্তব হয়ে উঠবে।",
+            "কেউ আপনার জীবনে আসবে এবং সবকিছু পরিবর্তন করবে।",
+            "একটি ইতিবাচক পরিবর্তন আসছে।",
+            "আপনি অপ্রত্যাশিত স্থানে সফলতা পাবেন।",
+            "ভালবাসা আপনার কাছে আসছে।",
+            "একজন জ্ঞানী ব্যক্তি শীঘ্রই আপনাকে মূল্যবান পরামর্শ দেবেন।",
+            "আপনি এমন একজনের সাথে দেখা করবেন যিনি আপনাকে অনুপ্রাণিত করবেন।",
+            "আপনার সৃজনশীলতা উত্তেজনাপূর্ণ সুযোগ নিয়ে আসবে।",
+            "শীঘ্রই শান্তির সময় আসবে আপনার জীবনে।",
+            "আপনার ইতিবাচক শক্তি ভালো জিনিস আকৃষ্ট করবে।"
+            ],
+            ru: [
+            "У вас будет отличный день!",
+            "Скоро произойдет что-то неожиданное.",
+            "Счастье уже близко.",
+            "Скоро вы получите хорошие новости.",
+            "Новая возможность уже на пути.",
+            "Удача благоволит смелым.",
+            "Сегодня вас ждет сюрприз.",
+            "Ожидайте лучшего, и лучшее придет.",
+            "Скоро вы откроете что-то новое о себе.",
+            "Ваши усилия скоро окупятся.",
+            "Мечта скоро станет реальностью.",
+            "Кто-то войдет в вашу жизнь и изменит всё.",
+            "На горизонте позитивные перемены.",
+            "Вы найдете успех в неожиданных местах.",
+            "Любовь рядом с вами.",
+            "Мудрый человек скоро даст вам ценный совет.",
+            "Вы встретите кого-то, кто вдохновит вас.",
+            "Ваше творчество приведет к захватывающим возможностям.",
+            "Скоро в вашей жизни наступит время покоя.",
+            "Ваша позитивная энергия привлечет хорошие вещи."
+            ],
+            pt: [
+            "Você terá um ótimo dia!",
+            "Algo inesperado acontecerá em breve.",
+            "A felicidade está logo ali.",
+            "Você receberá boas notícias em breve.",
+            "Uma nova oportunidade está a caminho.",
+            "A sorte favorece os corajosos.",
+            "Uma surpresa te espera hoje.",
+            "Espere o melhor, e o melhor virá.",
+            "Você descobrirá algo novo sobre si mesmo em breve.",
+            "Seu trabalho duro logo dará frutos.",
+            "Um sonho se tornará realidade em breve.",
+            "Alguém entrará em sua vida e mudará tudo.",
+            "Uma mudança positiva está no horizonte.",
+            "Você encontrará sucesso em lugares inesperados.",
+            "O amor está perto de você.",
+            "Uma pessoa sábia logo te dará conselhos valiosos.",
+            "Você conhecerá alguém que te inspirará.",
+            "Sua criatividade levará a oportunidades emocionantes.",
+            "Um tempo de paz chegará em breve à sua vida.",
+            "Sua energia positiva atrairá coisas boas."
+            ],
+            ur: [
+            "آپ کا دن بہت اچھا ہوگا!",
+            "جلد ہی کچھ غیر متوقع ہونے والا ہے۔",
+            "خوشی قریب ہی ہے۔",
+            "آپ کو جلد ہی اچھی خبر ملے گی۔",
+            "ایک نیا موقع آپ کے راستے میں ہے۔",
+            "قسمت بہادر لوگوں کا ساتھ دیتی ہے۔",
+            "آج آپ کے لیے ایک حیرت کا انتظار ہے۔",
+            "بہترین کی توقع کریں، اور بہترین آئے گا۔",
+            "آپ جلد ہی اپنے بارے میں کچھ نیا دریافت کریں گے۔",
+            "آپ کی محنت جلد ہی رنگ لائے گی۔",
+            "ایک خواب جلد ہی حقیقت بن جائے گا۔",
+            "کوئی آپ کی زندگی میں آئے گا اور سب کچھ بدل دے گا۔",
+            "ایک مثبت تبدیلی آنے والی ہے۔",
+            "آپ کو غیر متوقع جگہوں پر کامیابی ملے گی۔",
+            "محبت آپ کے قریب ہے۔",
+            "ایک عقلمند شخص جلد ہی آپ کو قیمتی مشورہ دے گا۔",
+            "آپ کسی ایسے شخص سے ملیں گے جو آپ کو متاثر کرے گا۔",
+            "آپ کی تخلیقی صلاحیتیں دلچسپ مواقع کی طرف لے جائیں گی۔",
+            "جلد ہی آپ کی زندگی میں امن کا وقت آئے گا۔",
+            "آپ کی مثبت توانائی اچھی چیزوں کو اپنی طرف متوجہ کرے گی۔"
+            ],
+            id: [
+            "Anda akan memiliki hari yang menyenangkan!",
+            "Sesuatu yang tak terduga akan segera terjadi.",
+            "Kebahagiaan sudah dekat.",
+            "Anda akan segera menerima kabar baik.",
+            "Sebuah kesempatan baru sedang menuju ke arah Anda.",
+            "Keberuntungan berpihak pada yang berani.",
+            "Sebuah kejutan menanti Anda hari ini.",
+            "Harapkan yang terbaik, dan yang terbaik akan datang.",
+            "Anda akan segera menemukan sesuatu yang baru tentang diri Anda.",
+            "Kerja keras Anda akan segera membuahkan hasil.",
+            "Sebuah mimpi akan segera menjadi kenyataan.",
+            "Seseorang akan masuk ke hidup Anda dan mengubah segalanya.",
+            "Perubahan positif sedang menuju ke arah Anda.",
+            "Anda akan menemukan kesuksesan di tempat yang tak terduga.",
+            "Cinta ada di dekat Anda.",
+            "Orang bijak akan segera memberi Anda nasihat berharga.",
+            "Anda akan bertemu seseorang yang akan menginspirasi Anda.",
+            "Kreativitas Anda akan membawa peluang menarik.",
+            "Waktu kedamaian akan segera tiba dalam hidup Anda.",
+            "Energi positif Anda akan menarik hal-hal baik."
+            ],
+            de: [
+            "Sie werden einen großartigen Tag haben!",
+            "Etwas Unerwartetes wird bald passieren.",
+            "Das Glück ist zum Greifen nah.",
+            "Sie werden bald gute Nachrichten erhalten.",
+            "Eine neue Gelegenheit ist auf dem Weg.",
+            "Das Glück begünstigt die Mutigen.",
+            "Eine Überraschung erwartet Sie heute.",
+            "Erwarten Sie das Beste, und das Beste wird kommen.",
+            "Sie werden bald etwas Neues über sich entdecken.",
+            "Ihre harte Arbeit wird bald Früchte tragen.",
+            "Ein Traum wird bald Wirklichkeit.",
+            "Jemand wird in Ihr Leben treten und alles verändern.",
+            "Eine positive Veränderung steht bevor.",
+            "Sie werden Erfolg an unerwarteten Orten finden.",
+            "Die Liebe ist in Ihrer Nähe.",
+            "Eine weise Person wird Ihnen bald wertvollen Rat geben.",
+            "Sie werden jemanden treffen, der Sie inspiriert.",
+            "Ihre Kreativität wird zu aufregenden Möglichkeiten führen.",
+            "Bald wird eine Zeit des Friedens in Ihr Leben kommen.",
+            "Ihre positive Energie wird gute Dinge anziehen."
+            ],
+            ja: [
+            "素晴らしい一日になるでしょう！",
+            "間もなく予期せぬことが起こります。",
+            "幸せはすぐそこにあります。",
+            "すぐに良い知らせが届きます。",
+            "新しいチャンスがやってきます。",
+            "幸運は勇敢な者に味方します。",
+            "今日はサプライズが待っています。",
+            "最善を期待すれば、最善が訪れます。",
+            "間もなく自分自身について新しいことを発見するでしょう。",
+            "あなたの努力はすぐに実を結びます。",
+            "夢がすぐに現実になります。",
+            "誰かがあなたの人生に入り、すべてを変えるでしょう。",
+            "ポジティブな変化が近づいています。",
+            "予期せぬ場所で成功を見つけるでしょう。",
+            "愛はあなたの近くにあります。",
+            "賢い人がすぐに貴重なアドバイスをくれるでしょう。",
+            "あなたをインスパイアする人に出会うでしょう。",
+            "あなたの創造力がエキサイティングな機会をもたらします。",
+            "間もなく平和な時が訪れます。",
+            "あなたのポジティブなエネルギーが良いものを引き寄せます。"
+            ],
+            sw: [
+            "Utakua na siku nzuri!",
+            "Kitu kisichotarajiwa kitatokea hivi karibuni.",
+            "Furaha iko karibu.",
+            "Utapokea habari njema hivi karibuni.",
+            "Fursa mpya iko njiani.",
+            "Bahati inapendelea wenye ujasiri.",
+            "Kirahisi kinakungoja leo.",
+            "Tegemea bora, na bora litakuja.",
+            "Hivi karibuni utagundua kitu kipya kuhusu wewe mwenyewe.",
+            "Juhudi zako zitazaa matunda hivi karibuni.",
+            "Ndoto itakuwa ukweli hivi karibuni.",
+            "Mtu ataingia kwenye maisha yako na kubadilisha kila kitu.",
+            "Mabadiliko mazuri yanakaribia.",
+            "Utapata mafanikio mahali ambapo husingetarajia.",
+            "Upendo uko karibu nawe.",
+            "Mtu mwenye hekama atakupa shauri la thamani hivi karibuni.",
+            "Utakutana na mtu atakayekuhamasisha.",
+            "Ubunifu wako utaleta fursa za kusisimua.",
+            "Wakati wa amani utakuja hivi karibuni kwenye maisha yako.",
+            "Nishati yako chanya itavutia mambo mazuri."
+            ],
+            mr: [
+            "तुमचा दिवस छान जाईल!",
+            "लवकरच काही अनपेक्षित घटनेची शक्यता आहे.",
+            "आनंद जवळच आहे.",
+            "तुम्हाला लवकरच चांगली बातमी मिळेल.",
+            "एक नवीन संधी तुमच्या मार्गावर आहे.",
+            "नशिब धाडसी लोकांच्या बाजूने असतो.",
+            "आज तुमची वाट पाहत आहे एक आश्चर्य.",
+            "सर्वोत्तमाची अपेक्षा ठेवा, आणि सर्वोत्तम येईल.",
+            "तुम्ही लवकरच स्वतःबद्दल काहीतरी नवीन शोधाल.",
+            "तुमच्या मेहनतीचे फळ लवकरच मिळेल.",
+            "एक स्वप्न लवकरच सत्य होईल.",
+            "कोणीतरी तुमच्या आयुष्यात येईल आणि सर्व काही बदलेल.",
+            "सकारात्मक बदल जवळ आला आहे.",
+            "तुम्हाला अनपेक्षित ठिकाणी यश मिळेल.",
+            "प्रेम तुमच्या जवळ आहे.",
+            "एक ज्ञानी व्यक्ती लवकरच तुम्हाला मौल्यवान सल्ला देईल.",
+            "तुम्ही कुणाला तरी भेटाल जे तुम्हाला प्रेरणा देईल.",
+            "तुमची निर्मितीक्षमता रोमांचक संधी घेऊन येईल.",
+            "तुमच्या आयुष्यात लवकरच शांततेचा काळ येईल.",
+            "तुमची सकारात्मक ऊर्जा चांगल्या गोष्टी आकर्षित करेल."
+            ],
+            te: [
+            "మీరు ఈ రోజు చాలా మంచిగా ఉంటారు!",
+            "త్వరలోనే ఏదో అనుకోని విషయం జరుగుతుంది.",
+            "సంతోషం చాలా దగ్గరలో ఉంది.",
+            "మీరు త్వరలోనే మంచి వార్తలు పొందుతారు.",
+            "ఒక కొత్త అవకాశం మీ దారిలో ఉంది.",
+            "ధైర్యశాలులకు అదృష్టం దక్కుతుంది.",
+            "ఈ రోజు మీకు ఒక ఆశ్చర్యం ఎదురుచూస్తోంది.",
+            "ఉత్తమమైనదాన్ని ఆశించండి, మరియు ఉత్తమమైనది వస్తుంది.",
+            "మీరు త్వరలోనే మీ గురించి కొత్తదాన్ని కనుగొంటారు.",
+            "మీ కష్టాలు త్వరలోనే ఫలితాలను ఇస్తాయి.",
+            "ఒక కల త్వరలోనే నిజమవుతుంది.",
+            "ఎవరో మీ జీవితంలోకి వచ్చి ప్రతిదీ మారుస్తారు.",
+            "సకారాత్మక మార్పు దగ్గరలో ఉంది.",
+            "మీరు అనుకోని ప్రదేశాలలో విజయాన్ని పొందుతారు.",
+            "ప్రేమ మీ దగ్గరలో ఉంది.",
+            "ఒక జ్ఞానవంతుడు త్వరలోనే మీకు విలువైన సలహా ఇస్తారు.",
+            "మీకు ప్రేరణ ఇచ్చే వ్యక్తిని కలుసుకుంటారు.",
+            "మీ సృజనాత్మకత ఉత్తేజకరమైన అవకాశాలకు దారి తీస్తుంది.",
+            "మీ జీవితంలో శాంతి కాలం త్వరలోనే వస్తుంది.",
+            "మీ సకారాత్మక శక్తి మంచి విషయాలను ఆకర్షిస్తుంది."
+            ],
+            tr: [
+            "Harika bir gün geçireceksiniz!",
+            "Yakında beklenmedik bir şey olacak.",
+            "Mutluluk çok yakında.",
+            "Yakında iyi haberler alacaksınız.",
+            "Yeni bir fırsat yolda.",
+            "Şans cesur olanları sever.",
+            "Bugün sizi bir sürpriz bekliyor.",
+            "En iyisini umut edin, en iyisi gelecek.",
+            "Yakında kendinizle ilgili yeni bir şey keşfedeceksiniz.",
+            "Emekleriniz yakında meyvesini verecek.",
+            "Bir rüya yakında gerçek olacak.",
+            "Birisi hayatınıza girecek ve her şeyi değiştirecek.",
+            "Olumlu bir değişiklik yaklaşıyor.",
+            "Beklenmedik yerlerde başarı bulacaksınız.",
+            "Aşk size yakın.",
+            "Bilge bir kişi size yakında değerli tavsiyeler verecek.",
+            "Size ilham verecek biriyle tanışacaksınız.",
+            "Yaratıcılığınız heyecan verici fırsatlara yol açacak.",
+            "Yakında hayatınıza huzur dolu bir zaman gelecek.",
+            "Pozitif enerjiniz iyi şeyleri çekecek."
+            ],
+            ko: [
+            "오늘은 좋은 날이 될 거예요!",
+            "곧 예상치 못한 일이 일어날 거예요.",
+            "행복이 바로 코앞에 있어요.",
+            "곧 좋은 소식을 들을 거예요.",
+            "새로운 기회가 찾아올 거예요.",
+            "운은 용감한 사람에게 따릅니다.",
+            "오늘은 놀라운 일이 기다리고 있어요.",
+            "최고를 기대하세요, 최고가 찾아올 거예요.",
+            "곧 자신에 대해 새로운 것을 발견할 거예요.",
+            "당신의 노력이 곧 결실을 맺을 거예요.",
+            "꿈이 곧 현실이 될 거예요.",
+            "누군가가 당신의 삶에 들어와 모든 것을 바꿀 거예요.",
+            "긍정적인 변화가 다가오고 있어요.",
+            "예상치 못한 곳에서 성공을 찾을 거예요.",
+            "사랑이 당신 곁에 있어요.",
+            "현명한 사람이 곧 소중한 조언을 해줄 거예요.",
+            "당신에게 영감을 줄 누군가를 만날 거예요.",
+            "당신의 창의력이 흥미로운 기회를 가져다줄 거예요.",
+            "곧 평화로운 시간이 찾아올 거예요.",
+            "당신의 긍정적인 에너지가 좋은 일을 끌어당길 거예요."
+            ],
+            vi: [
+            "Bạn sẽ có một ngày tuyệt vời!",
+            "Sắp có điều bất ngờ xảy ra.",
+            "Hạnh phúc đang ở rất gần.",
+            "Bạn sẽ sớm nhận được tin tốt.",
+            "Một cơ hội mới đang trên đường đến.",
+            "Vận may ủng hộ người dũng cảm.",
+            "Hôm nay có một bất ngờ đang chờ đợi bạn.",
+            "Hãy mong đợi điều tốt nhất, và điều tốt nhất sẽ đến.",
+            "Bạn sẽ sớm khám phá điều gì đó mới về bản thân.",
+            "Công sức của bạn sẽ sớm được đền đáp.",
+            "Một giấc mơ sẽ sớm trở thành hiện thực.",
+            "Ai đó sẽ bước vào cuộc đời bạn và thay đổi mọi thứ.",
+            "Một sự thay đổi tích cực đang đến gần.",
+            "Bạn sẽ tìm thấy thành công ở những nơi không ngờ tới.",
+            "Tình yêu đang ở gần bạn.",
+            "Một người khôn ngoan sẽ sớm cho bạn lời khuyên quý giá.",
+            "Bạn sẽ gặp ai đó truyền cảm hứng cho bạn.",
+            "Sự sáng tạo của bạn sẽ dẫn đến những cơ hội thú vị.",
+            "Một thời gian yên bình sẽ sớm đến với cuộc đời bạn.",
+            "Năng lượng tích cực của bạn sẽ thu hút những điều tốt đẹp."
+            ],
+            ta: [
+            "நீங்கள் ஒரு நல்ல நாள் அனுபவிப்பீர்கள்!",
+            "விரைவில் எதிர்பாராத ஒன்று நடக்கும்.",
+            "மகிழ்ச்சி மிக அருகில் உள்ளது.",
+            "நீங்கள் விரைவில் நல்ல செய்திகளைப் பெறுவீர்கள்.",
+            "ஒரு புதிய வாய்ப்பு வழியில் உள்ளது.",
+            "தைரியமானவர்களுக்கு அதிர்ஷ்டம் உண்டு.",
+            "இன்று உங்களுக்கு ஒரு ஆச்சரியம் காத்திருக்கிறது.",
+            "சிறந்ததை எதிர்பார்க்கவும், சிறந்தது வரும்.",
+            "நீங்கள் விரைவில் உங்களைப் பற்றி புதிய ஒன்றைக் கண்டுபிடிப்பீர்கள்.",
+            "உங்கள் கடின உழைப்பு விரைவில் பலனைத் தரும்.",
+            "ஒரு கனவு விரைவில் நிஜமாகும்.",
+            "யாரோ ஒருவர் உங்கள் வாழ்க்கையில் நுழைந்து எல்லாவற்றையும் மாற்றுவார்.",
+            "ஒரு நேர்மறையான மாற்றம் வரவிருக்கிறது.",
+            "நீங்கள் எதிர்பாராத இடங்களில் வெற்றியைக் காண்பீர்கள்.",
+            "காதல் உங்களுக்கு அருகில் உள்ளது.",
+            "ஒரு ஞானமிக்க நபர் விரைவில் உங்களுக்கு மதிப்புமிக்க ஆலோசனை வழங்குவார்.",
+            "உங்களை ஊக்கப்படுத்தும் ஒருவரை நீங்கள் சந்திப்பீர்கள்.",
+            "உங்கள் படைப்பாற்றல் உற்சாகமான வாய்ப்புகளுக்கு வழிவகுக்கும்.",
+            "விரைவில் உங்கள் வாழ்க்கையில் அமைதியான காலம் வரும்.",
+            "உங்கள் நேர்மறையான ஆற்றல் நல்ல விஷயங்களை ஈர்க்கும்."
+            ],
+            nl: [
+                "Geluk komt tot degenen die geloven.",
+                "Een kleine stap kan een grote verandering brengen.",
+                "Doe wat je lief hebt en geluk zal volgen.",
+                "Het geluk lacht je toe, grijp je kans!",
+                "Elke dag is een nieuw begin, maak er het beste van.",
+                "Geluk is een keuze, kies wijs.",
+                "Dromen zijn de sleutels tot geluk.",
+                "Geluk vind je in de kleine dingen.",
+                "Volg je hart en het geluk zal je leiden.",
+                "Een positieve geest brengt geluk.",
+                "Geluk is overal, je hoeft het alleen maar te zien.",
+                "De toekomst lacht je toe, blijf hoopvol.",
+                "Geluk is een reis, geen bestemming.",
+                "Dankbaarheid is de sleutel tot geluk.",
+                "Geluk vind je wanneer je stopt met zoeken.",
+                "Elke dag is een geschenk, geniet ervan.",
+                "Geluk is besmettelijk, verspreid het!",
+                "Doe iets goeds en geluk zal terugkomen.",
+                "Geluk begint met een glimlach.",
+                "Jij bent de maker van je eigen geluk."
+             ]
+        };
+
+        let selectedLanguage = 'en'; // Default language is English
+
+        // Function to change the language
+        function changeLanguage() {
+            const languageSelect = document.getElementById('languageSelect');
+            selectedLanguage = languageSelect.value; // Update selected language
+            showFortune(); // Show a fortune in the new language
+        }
+
+        // Function to show a random fortune based on selected language
+        function showFortune() {
+            const fortuneDisplay = document.getElementById('fortune');
+            const fortunesInLanguage = fortunes[selectedLanguage];
+            const randomFortune = fortunesInLanguage[Math.floor(Math.random() * fortunesInLanguage.length)];
+            fortuneDisplay.textContent = randomFortune;
+        }
+
+        // Initial call to display fortune in default language (English)
+        showFortune();
+    </script>
+</body>
+</html>
